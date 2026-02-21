@@ -1,0 +1,24 @@
+server:
+  port: ${PORT:8081}
+
+spring:
+  application:
+    name: auth-service # Nombre oficial según la arquitectura
+
+  datasource:
+    # Apunta al puerto 5433 definido en tu docker-compose
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/auth_db}
+    username: ${DB_USER:user_auth}
+    password: ${DB_PASS:password_auth}
+
+  # Configuración de RabbitMQ
+  rabbitmq:
+    host: ${RABBIT_HOST:localhost}
+    port: ${RABBIT_PORT:5672}
+    username: ${RABBIT_USER:guest}
+    password: ${RABBIT_PASS:guest}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
