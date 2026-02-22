@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AllArgsConstructor
 //respetar la url base api/auth
-@RequestMapping("/api/auth/prueba")
+@RequestMapping("/prueba")
 public class PruebaAuthApiController implements PruebaAuthApi {
     private final PruebaAuthService pruebaAuthService;
     @Override
