@@ -4,7 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -13,22 +15,30 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // Configurando el sistema para que no use hashing según petición (texto plano)
+    // Configurando el sistema para Encriptar las contraseñas
     @Bean
-    @SuppressWarnings("deprecation")
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para APIs JWT
+                // Deshabilitar CSRF es correcto para APIs REST con JWT
+                .csrf(AbstractHttpConfigurer::disable)
+
+                // Mantener la sesión STATELESS es perfecto para microservicios y JWT
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // 2. Ajustamos las reglas de autorización
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/prueba/**").permitAll() // Hacemos públicas las rutas de pruebas
-                                                                               // y de login/registro
-                        .anyRequest().authenticated());
+                        // Solo exponemos las rutas del controlador de autenticación
+                        .requestMatchers("/register", "/login", "/verify").permitAll()
+
+                        // Cualquier otro endpoint interno de este microservicio exigirá autenticación
+                        .anyRequest().authenticated()
+                );
+
         return http.build();
     }
 }

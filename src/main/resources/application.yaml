@@ -22,3 +22,16 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+  # Configuración de Mailtrap unificada aquí
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: "3448e0e7012664"
+    password: "e7afc0171e321e"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
