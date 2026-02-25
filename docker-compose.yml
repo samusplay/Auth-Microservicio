@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # ====================== BASES DE DATOS ======================
+  auth-db:
+    image: postgres:15-alpine
+    container_name: auth-db
+    environment:
+      POSTGRES_USER: user_auth
+      POSTGRES_PASSWORD: password_auth
+      POSTGRES_DB: auth_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - auth_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  catalog-db:
+    image: postgres:15-alpine
+    container_name: catalog-db
+    environment:
+      POSTGRES_USER: user_catalog
+      POSTGRES_PASSWORD: password_catalog
+      POSTGRES_DB: catalog_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - catalog_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  orders-db:
+    image: postgres:15-alpine
+    container_name: orders-db
+    environment:
+      POSTGRES_USER: user_orders
+      POSTGRES_PASSWORD: password_orders
+      POSTGRES_DB: orders_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - orders_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # ====================== RABBITMQ ======================
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    restart: unless-stopped
+
+  # ====================== API GATEWAY (desde GitHub) ======================
+  apigateway:
+    image: ghcr.io/samusplay/apigateway:latest
+    container_name: apigateway
+    ports:
+      - "8080:8080"
+    environment:
+      AUTH_URL: http://host.docker.internal:8081
+      CATALOG_URL: http://host.docker.internal:8082
+      ORDERS_URL: http://host.docker.internal:8083
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+volumes:
+  auth_data:
+  catalog_data:
+  orders_data:
