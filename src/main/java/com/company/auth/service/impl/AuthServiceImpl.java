@@ -2,6 +2,7 @@ package com.company.auth.service.impl;
 
 import com.company.auth.entity.Role;
 import com.company.auth.entity.Usuario;
+import com.company.auth.exceptions.VerificationException;
 import com.company.auth.models.AuthRequest;
 import com.company.auth.models.AuthResponse;
 import com.company.auth.models.RegisterRequest;
@@ -55,11 +56,11 @@ public class AuthServiceImpl implements AuthService {
     public Usuario register(RegisterRequest request) {
         //validar si ya el usuario existe
         if(usuarioRepository.findByUsername(request.getUsername()).isPresent()){
-            throw  new ResponseStatusException(HttpStatus.BAD_REQUEST,"Usuario ya en uso");
+            throw  new VerificationException("Usuario ya en uso");
         }
         //validar si el email ya esta en uso
         if(usuarioRepository.findByEmail(request.getEmail()).isPresent()){
-            throw  new ResponseStatusException(HttpStatus.BAD_REQUEST,"El email ya esta registrado");
+            throw  new VerificationException("El email ya esta registrado");
         }
         //instaciamos
         Usuario us = new Usuario();
@@ -100,7 +101,7 @@ public class AuthServiceImpl implements AuthService {
 
         //validamos si ya estaba verificado
         if(us.isEnabled()){
-            throw  new ResponseStatusException(HttpStatus.BAD_REQUEST,"La cuenta ya esta verificada");
+            throw  new VerificationException("La cuenta ya esta verificada");
         }
         //validamos que el codigo no haya expirado
         if(us.getCodeExpiration().isBefore(LocalDateTime.now())){
