@@ -1,12 +1,11 @@
-package com.microservicio.usuario.entity;
+package com.company.auth.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+import lombok.*;
 
+import java.time.LocalDateTime;
+@Getter
+@Setter
 @Entity
     @Data
     @Builder
@@ -34,6 +33,20 @@ import java.time.LocalDateTime;
         @Column (name = "Creado", updatable = false)
         @org.hibernate.annotations.CreationTimestamp
         private LocalDateTime createdAt;
+
+        private Rol rol;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
 
 
 }

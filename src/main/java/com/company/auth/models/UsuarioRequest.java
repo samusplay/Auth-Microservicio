@@ -1,7 +1,6 @@
-package com.microservicio.usuario.dto;
+package com.company.auth.models;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegistroDto {
+public class UsuarioRequest {
 
     @NotBlank(message="El nombre es obligatorio")
     private String nombre;

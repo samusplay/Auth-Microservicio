@@ -1,11 +1,11 @@
-package com.microservicio.usuario.repository;
+package com.company.auth.repository;
 
-import com.microservicio.usuario.entity.Usuario;
+import com.company.auth.entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface Repository extends JpaRepository<Usuario,Long> {
+public interface UsuarioRepository extends JpaRepository<Usuario,Long> {
     Optional<Usuario> findByEmail(String email);
 
     boolean existsByEmail(String email);
