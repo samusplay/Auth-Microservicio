@@ -52,4 +52,11 @@ public class GlobalExceptionHandler {
                 .build();
         return new ResponseEntity<>(error, status);
     }
+
+    //verificar que la cuenta verificada da un codigo 403
+    @ExceptionHandler(AccountNotVerifiedException.class)
+    public ResponseEntity<ErrorResponse> handleAccountNotVerified(
+            AccountNotVerifiedException ex, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage(), request, null);
+    }
 }

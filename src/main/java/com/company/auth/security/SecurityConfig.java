@@ -2,6 +2,7 @@ package com.company.auth.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -10,6 +11,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -32,13 +38,27 @@ public class SecurityConfig {
 
                 // 2. Ajustamos las reglas de autorización
                 .authorizeHttpRequests(auth -> auth
+                        //permitir angular
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // Solo exponemos las rutas del controlador de autenticación
-                        .requestMatchers("/register", "/login", "/verify").permitAll()
+                        .requestMatchers("/register", "/login", "/verify","/prueba").permitAll()
 
                         // Cualquier otro endpoint interno de este microservicio exigirá autenticación
                         .anyRequest().authenticated()
                 );
 
         return http.build();
+    }
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOriginPatterns(List.of("http://localhost:4200", "http://127.0.0.1:4200", "http://localhost:*"));
+        config.setAllowedMethods(List.of("*"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }

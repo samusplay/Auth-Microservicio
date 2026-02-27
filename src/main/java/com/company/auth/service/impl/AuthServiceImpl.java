@@ -2,6 +2,8 @@ package com.company.auth.service.impl;
 
 import com.company.auth.entity.Role;
 import com.company.auth.entity.Usuario;
+import com.company.auth.exceptions.AccountNotVerifiedException;
+import com.company.auth.exceptions.InvalidCredentialsException;
 import com.company.auth.exceptions.VerificationException;
 import com.company.auth.models.AuthRequest;
 import com.company.auth.models.AuthResponse;
@@ -33,18 +35,19 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(AuthRequest request) {
+
         // Obtenemos el usuario de la DB por su username (y si no existe, error 401)
         Usuario us = usuarioRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales incorrectas"));
+                .orElseThrow(() -> new InvalidCredentialsException( "Credenciales incorrectas"));
 
         //validamos si la cuenta ya fue verificada por correo
         if (!us.isEnabled()) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cuenta no verificada. Por favor revisa tu correo.");
+            throw new AccountNotVerifiedException( "Cuenta no verificada. Por favor revisa tu correo.");
         }
 
         // Validamos la contraseña exacto como texto plano
         if (!passwordEncoder.matches(request.getPassword(), us.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales incorrectas");
+            throw new InvalidCredentialsException( "Credenciales incorrectas");
         }
 
         // Generamos el json web token de respuesta
