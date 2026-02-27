@@ -6,6 +6,7 @@ import com.company.auth.models.AuthResponse;
 import com.company.auth.repository.UsuarioRepository;
 import com.company.auth.security.JwtService;
 import com.company.auth.security.UserDetailsImpl;
+import com.company.auth.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -24,7 +24,9 @@ public class UsuarioApiController implements UsuarioApi {
     }
 
     @Override
-    public ResponseEntity<Usuario> register(AuthRequest request) {
-        return new ResponseEntity<>(usuarioService.register(request), HttpStatus.CREATED);
+    public ResponseEntity<AuthResponse> register(AuthRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(usuarioService.register(request));
     }
 }

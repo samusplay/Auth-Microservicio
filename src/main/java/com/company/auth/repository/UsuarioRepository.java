@@ -5,9 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UsuarioRepository extends JpaRepository<Usuario,Long> {
-    //metodos personalisados
- //Optinal+identidad+nombre+(que va dar,response)
-    Optional<Usuario>findByUserName(String username);
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+
+    Optional<Usuario> findBynombre(String nombre);
+
     Optional<Usuario> findByEmail(String email);
 }
