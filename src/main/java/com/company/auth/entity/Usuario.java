@@ -1,4 +1,4 @@
-package Microservicio.entity;
+package com.company.auth.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity //decorador obligatorio para que indetifique
 @Table(name="users") //nombre de como vamos llamar en la base de datos
-public class User {
+public class Usuario {
 
     //Campos de la base de datos
     @Id
