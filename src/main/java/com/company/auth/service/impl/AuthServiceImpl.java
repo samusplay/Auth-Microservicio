@@ -5,10 +5,7 @@ import com.company.auth.entity.Usuario;
 import com.company.auth.exceptions.AccountNotVerifiedException;
 import com.company.auth.exceptions.InvalidCredentialsException;
 import com.company.auth.exceptions.VerificationException;
-import com.company.auth.models.AuthRequest;
-import com.company.auth.models.AuthResponse;
-import com.company.auth.models.RegisterRequest;
-import com.company.auth.models.VerifyRequest;
+import com.company.auth.models.*;
 import com.company.auth.repository.UsuarioRepository;
 import com.company.auth.security.JwtProvider;
 import com.company.auth.service.AuthService;
@@ -56,45 +53,50 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Usuario register(RegisterRequest request) {
-        //validar si ya el usuario existe
+    public RegisterResponse register(RegisterRequest request) {
+        // validar si ya el usuario existe
         if(usuarioRepository.findByUsername(request.getUsername()).isPresent()){
-            throw  new VerificationException("Usuario ya en uso");
+            throw new VerificationException("Usuario ya en uso");
         }
-        //validar si el email ya esta en uso
+        // validar si el email ya esta en uso
         if(usuarioRepository.findByEmail(request.getEmail()).isPresent()){
-            throw  new VerificationException("El email ya esta registrado");
+            throw new VerificationException("El email ya esta registrado");
         }
-        //instaciamos
+
+        // instanciamos
         Usuario us = new Usuario();
         us.setUsername(request.getUsername());
-        //asignar el email
+        // asignar el email
         us.setEmail(request.getEmail());
 
-        //guardar la contraseña hasheada
+        // guardar la contraseña hasheada
         us.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        //configuracion por defecto
+        // configuracion por defecto
         us.setRole(Role.ROLE_CUSTOMER);
-        //inicia en false hasta que se verique
+        // inicia en false hasta que se verifique
         us.setEnabled(false);
 
-        //Genereamos un codigo aleatorio para que confirme
+        // Generamos un codigo aleatorio para que confirme
         String code = String.format("%06d", new Random().nextInt(999999));
         us.setVerificationCode(code);
 
-        //15 minutos para validar el codigo
+        // 15 minutos para validar el codigo
         us.setCodeExpiration(LocalDateTime.now().plusMinutes(15));
 
-        //guardamos en la base de datos (inactivo)
-        Usuario savedUser=usuarioRepository.save(us);
+        // guardamos en la base de datos (inactivo)
+        Usuario savedUser = usuarioRepository.save(us);
 
-        //disparamos el envio de correo
-        emailService.sendVerificationEmail(us.getEmail(),code);
+        // disparamos el envio de correo
+        emailService.sendVerificationEmail(us.getEmail(), code);
 
-        //guardamos
-        return savedUser;
+        // RETORNAMOS EL NUEVO DTO
+        return RegisterResponse.builder()
+                .message("Usuario registrado exitosamente. Por favor verifica tu correo.")
+                .username(savedUser.getUsername())
+                .build();
     }
+
 
     @Override
     public void verifyCode(VerifyRequest request) {

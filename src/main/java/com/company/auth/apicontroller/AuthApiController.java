@@ -2,10 +2,7 @@ package com.company.auth.apicontroller;
 
 import com.company.auth.api.AuthApi;
 import com.company.auth.entity.Usuario;
-import com.company.auth.models.AuthRequest;
-import com.company.auth.models.AuthResponse;
-import com.company.auth.models.RegisterRequest;
-import com.company.auth.models.VerifyRequest;
+import com.company.auth.models.*;
 import com.company.auth.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,10 +23,12 @@ public class AuthApiController implements AuthApi {
     }
 
     @Override
-    public ResponseEntity<Usuario> register(RegisterRequest request) {
-        //Delegamos al servicio
-        return new ResponseEntity<>(authService.register(request),HttpStatus.CREATED);
+    public ResponseEntity<RegisterResponse> register(RegisterRequest request) {
+        RegisterResponse response=authService.register(request);
+        //devolver respuesta
+        return  ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
 
     @Override
     public ResponseEntity<String> verifyCode(VerifyRequest request) {

@@ -1,10 +1,7 @@
 package com.company.auth.api;
 
 import com.company.auth.entity.Usuario;
-import com.company.auth.models.AuthRequest;
-import com.company.auth.models.AuthResponse;
-import com.company.auth.models.RegisterRequest;
-import com.company.auth.models.VerifyRequest;
+import com.company.auth.models.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +15,7 @@ public interface AuthApi {
 
     //endpoint de registro
     @PostMapping("/register")
-    ResponseEntity<Usuario> register(@Valid @RequestBody RegisterRequest request);
+    ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request);
 
     //endpoint verificacion
     @PostMapping("/verify")
