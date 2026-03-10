@@ -1,14 +1,16 @@
 package com.company.auth.apicontroller;
 
 import com.company.auth.api.AuthApi;
-import com.company.auth.entity.Usuario;
 import com.company.auth.models.*;
 import com.company.auth.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -29,11 +31,16 @@ public class AuthApiController implements AuthApi {
         return  ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-
     @Override
-    public ResponseEntity<String> verifyCode(VerifyRequest request) {
+    public ResponseEntity<Map<String, String>> verifyCode(@Valid VerifyRequest request) {
+        //devolver al servicio
         authService.verifyCode(request);
-        return ResponseEntity.ok("Cuenta verificada exitosamente.Ya puedes iniciar sesion");
+
+        //devolvemos la respuesta
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Cuenta verificada exitosamente. Ya puedes iniciar sesion");
+
+        return ResponseEntity.ok(response);
     }
 
 

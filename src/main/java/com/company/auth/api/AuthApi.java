@@ -1,11 +1,12 @@
 package com.company.auth.api;
 
-import com.company.auth.entity.Usuario;
 import com.company.auth.models.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
+
+import java.util.Map;
 
 public interface AuthApi {
 
@@ -19,6 +20,6 @@ public interface AuthApi {
 
     //endpoint verificacion
     @PostMapping("/verify")
-    ResponseEntity<String>verifyCode(@Valid @RequestBody VerifyRequest request);
+     ResponseEntity<Map<String, String>> verifyCode(@Valid @RequestBody VerifyRequest request);
 }
 
