@@ -47,8 +47,8 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidCredentialsException( "Credenciales incorrectas");
         }
 
-        // Generamos el json web token de respuesta
-        String token = jwtProvider.generateToken(us.getUsername());
+        // Generamos el json web token de respuesta con username y id
+        String token = jwtProvider.generateToken(us.getUsername(),us.getId());
         return new AuthResponse(token);
     }
 
