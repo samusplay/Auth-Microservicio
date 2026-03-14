@@ -41,7 +41,7 @@ public class SecurityConfig {
                         //permitir angular
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // Solo exponemos las rutas del controlador de autenticación
-                        .requestMatchers("/register", "/login", "/verify","/prueba").permitAll()
+                        .requestMatchers("/register", "/login", "/verify","/prueba", "/health").permitAll()
 
                         // Cualquier otro endpoint interno de este microservicio exigirá autenticación
                         .anyRequest().authenticated()
